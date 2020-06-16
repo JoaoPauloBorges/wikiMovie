@@ -1,0 +1,41 @@
+version: "3"
+
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_DB: "wikimovie"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+    ports:
+      - "5432:5432"
+    networks:
+      - app-network
+
+  webserver:
+    build: ./frontend
+    container_name: webserver
+    ports:
+      - "4201:80"
+    networks:
+      - app-network
+
+  nodeserver:
+    environment:
+      DB_HOST: db
+      DB_USER: postgres
+      DB_PASS: postgres
+      DB_NAME: wikimovie
+    build: ./backend
+    container_name: nodeserver
+    volumes:
+      - ./backend:/code
+    command: sh -c "npx sequelize-cli db:migrate && node src/server.js"
+    ports:
+      - "3000:3000"
+    networks:
+      - app-network
+
+networks: 
+  app-network:
+    driver: bridge
