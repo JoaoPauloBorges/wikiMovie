@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavbarModule } from './navbar/navbar.module';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { UploaderModule } from './uploader/uploader.module';
 
 
 
@@ -8,8 +10,13 @@ import { NavbarModule } from './navbar/navbar.module';
   declarations: [],
   imports: [
     CommonModule,
-    NavbarModule
+    NavbarModule,
+    MatSnackBarModule,
+    UploaderModule
   ],
-  exports: [NavbarModule]
+  exports: [
+    NavbarModule,
+    MatSnackBarModule,
+    UploaderModule]
 })
 export class SharedModule { }

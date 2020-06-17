@@ -38,9 +38,10 @@ export class HomeComponent implements OnInit {
   search() {
     const query = this.searchForm.get('queryInput').value;
 
-    if (!!query) {
-      // this.resultList = this.service.searchMovie(query);
-    }
+    this.service.searchMovie(query).subscribe(movie => {
+      this.resultList = movie;
+    });
+
   }
 
 }

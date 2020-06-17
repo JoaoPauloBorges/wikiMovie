@@ -31,6 +31,8 @@
     </mat-form-field>
 
     <!-- imgPath -->
+    <app-uploader [imagePath]="getImgSrc()" title="movie img" (bodyResponse)="imgListener($event)"></app-uploader>
+    <input type="hidden" formControlName=imgUrl/>
 
     <button *ngIf="!consulting" mat-raised-button color="accent" (click)="addPerson()">add person</button>
 

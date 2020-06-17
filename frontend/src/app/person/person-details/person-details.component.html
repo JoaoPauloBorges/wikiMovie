@@ -8,7 +8,7 @@
   </div>
 
   <ng-template class="card" #form>
-    <form [formGroup]="personForm" (ngSubmit)="onSubmit()" class="gridTable row-1 forms">
+    <form [formGroup]="personForm" class="gridTable row-1 forms">
       <!-- name -->
       <mat-form-field>
         <mat-label>Person name</mat-label>
@@ -41,7 +41,7 @@
       <!-- born -->
       <mat-form-field>
         <mat-label>Born</mat-label>
-        <input matInput formControlName="born" [matDatepicker]="picker" placeholder="Choose a date">
+        <input matInput formControlName="bornAt" [matDatepicker]="picker" placeholder="Choose a date">
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>

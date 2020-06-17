@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const config = require('./config/config');
 const moviesRouter = require('./api/routes/movies.router');
-
+const filesRouter = require('./api/routes/files.router')
 
 async function startServer() {
     const app = express();
@@ -11,10 +11,14 @@ async function startServer() {
 
     // routes
     app.use('/api/movies',moviesRouter);    
+    app.use('/api/files', filesRouter);
+
+    app.use('/api/public', express.static(__dirname + '/public/img'));
 
     // DB
     require('./models');
     console.log('DB Intialized');
+
 
     // Initialize the app.
     let server = app.listen(config.port, function () {

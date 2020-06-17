@@ -4,7 +4,6 @@ const MoviesController = require('../../controllers/movies.controller');
 const router = express.Router();
 
 router.post('/', async (req, resp) => {
-   console.log('aqui')
    const movie = await MoviesController.create(req.body)
       .catch(err => { console.log(err); resp.status(400) });
 
@@ -39,20 +38,20 @@ router.delete('/:movieId', async (req, resp) => {
    resp.json({entriesDeleted: numbers}).status(200);
 });
 
-router.post('/:movieId/actors', async (req, resp) => {
+router.post('/:movieId/actor', async (req, resp) => {
    const movie = await MoviesController.associateActor(req.body, req.params.movieId)
       .catch(err => { console.log(err); resp.status(400) });
    resp.json(movie);
 });
 
-router.post('/:movieId/directors', async (req, resp) => {
+router.post('/:movieId/director', async (req, resp) => {
    const movie = await MoviesController.associateDirector(req.body, req.params.movieId)
       .catch(err => { console.log(err); resp.status(400) });
 
    resp.json(movie);
 });
 
-router.post('/:movieId/writers', async (req, resp) => {
+router.post('/:movieId/writer', async (req, resp) => {
    const movie = await MoviesController.associateWriter(req.body, req.params.movieId)
       .catch(err => { console.log(err); resp.status(400) });
 

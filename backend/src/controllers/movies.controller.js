@@ -1,10 +1,11 @@
 const Movies = require('../models/movies');
 const Person = require('../models/person');
 const PersonMovie = require('../models/personMovie');
+const { Op } = require("sequelize");
+
 
 exports.create = async (body) => {
-    body.imgUrl = "https://lh3.googleusercontent.com/gLt2AMr-UTklFkPigQ6PiAWnfCXUHF5Mp_M1rJwSPnUzFQIhZ7J3nK1SQwR-6Ve_Bac7=w400-h600-rw";
-    const movie = await Movies.create({...body});
+    const movie = await Movies.create({ ...body });
     return movie;
 }
 
@@ -13,31 +14,47 @@ exports.list = async () => {
     return movies;
 }
 
-exports.findById = async (id) => {
-    const movie = await Movies.findByPk(id, {
-        attributes: {exclude: ["createdAt", "updatedAt"]},
-        include: [
-            {association: 'director', attributes: {exclude: ["createdAt", "updatedAt"]}, through: { where: {'personRule': 'director'}, attributes: [] }},
-            {association: 'actors', attributes: {exclude: ["createdAt", "updatedAt"]}, through: { where: {'personRule': 'actor'}, attributes: []}},
-            {association: 'writer', attributes: {exclude: ["createdAt", "updatedAt"]}, through: { where: {'personRule': 'writer'}, attributes: []}}
-        ]
-    });
-    return movie;
-}
-
-exports.update = async(body, movieId) => {
-    if (movieId != body.id && !await Movies.findByPk(body.id)) {
-        throw "invalid movieId!";
+exports.findById = async (idOrName) => {
+    let parsed = parseInt(idOrName);
+    if (!isNaN(parsed)) {
+        console.log('aqui')
+        const movie = await Movies.findByPk(idOrName, {
+            attributes: { exclude: ["createdAt", "updatedAt"] },
+            include: [
+                { association: 'director', attributes: { exclude: ["createdAt", "updatedAt"] }, through: { where: { 'personRule': 'director' }, attributes: [] } },
+                { association: 'actors', attributes: { exclude: ["createdAt", "updatedAt"] }, through: { where: { 'personRule': 'actor' }, attributes: [] } },
+                { association: 'writer', attributes: { exclude: ["createdAt", "updatedAt"] }, through: { where: { 'personRule': 'writer' }, attributes: [] } }
+            ]
+        });
+        return movie;
     }
 
-    const [ movie ] = await Movies.upsert({...body})
-    return movie;
+    const movies = await Movies.findAll({ where: {name: {[Op.like]: '%'+idOrName+'%'}},
+        attributes: { exclude: ["createdAt", "updatedAt"] },
+        include: [
+            { association: 'director', attributes: { exclude: ["createdAt", "updatedAt"] }, through: { where: { 'personRule': 'director' }, attributes: [] } },
+            { association: 'actors', attributes: { exclude: ["createdAt", "updatedAt"] }, through: { where: { 'personRule': 'actor' }, attributes: [] } },
+            { association: 'writer', attributes: { exclude: ["createdAt", "updatedAt"] }, through: { where: { 'personRule': 'writer' }, attributes: [] } }
+        ]
+    });
+    return movies;
 }
 
-exports.delete = async(movieId) => {
-    const number = await Movies.destroy({where: {
-        id: movieId
-    }})
+exports.update = async (body, movieId) => {
+
+    const [movies] = await Movies.update(
+        { ...body },
+        { returning: true, where: { id: movieId } }
+    );
+    return movies[0];
+}
+
+exports.delete = async (movieId) => {
+    const number = await Movies.destroy({
+        where: {
+            id: movieId
+        }
+    })
     return number;
 }
 
@@ -46,21 +63,31 @@ const associateRule = async (rule, body, movieId) => {
     if (!movie) {
         throw "invalid movieId!";
     }
-    const [person] = await Person.findOrCreate({
-        where:
-            { ...body }
-    });
 
-    await PersonMovie.create({
-        personId: person.id,
-        movieId: movieId,
-        personRule: rule,
-    })
+    let person;
+    if (!!body.id) {
+        person = await Person.findByPk(body.id);
+        if (!!person) {
+            await person.update(body)
+        } else {
+            person = await Person.create({ ...body })
+        }
+    }
+
+    args = { personId: person.id, movieId: movieId, personRule: rule };
+
+    let personMovie = await PersonMovie.findOne({ where: { ...args } });
+    if (!!personMovie) {
+        await personMovie.update(args);
+    } else {
+        personMovie = await PersonMovie.create({ ...args })
+        console.log({ criadooo: personMovie });
+    }
 
     return this.findById(movieId);
 }
 
-exports.associateActor = async(actor, movieId) => {
+exports.associateActor = async (actor, movieId) => {
     return await associateRule('actor', actor, movieId);
 }
 exports.associateDirector = async (director, movieId) => {

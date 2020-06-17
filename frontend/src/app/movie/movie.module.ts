@@ -11,6 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import { PersonModule } from '../person/person.module';
+import { UploaderModule } from '../shared/uploader/uploader.module';
 
 
 @NgModule({
@@ -26,7 +27,8 @@ import { PersonModule } from '../person/person.module';
     MatInputModule,
     MatButtonModule,
     MatIconModule,
-    PersonModule
+    PersonModule,
+    UploaderModule
   ],
   exports: [MovieDetailsComponent, MovieViewComponent],
 
