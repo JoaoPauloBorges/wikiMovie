@@ -17,7 +17,6 @@ exports.list = async () => {
 exports.findById = async (idOrName) => {
     let parsed = parseInt(idOrName);
     if (!isNaN(parsed)) {
-        console.log('aqui')
         const movie = await Movies.findByPk(idOrName, {
             attributes: { exclude: ["createdAt", "updatedAt"] },
             include: [
@@ -29,7 +28,8 @@ exports.findById = async (idOrName) => {
         return movie;
     }
 
-    const movies = await Movies.findAll({ where: {name: {[Op.like]: '%'+idOrName+'%'}},
+    const movies = await Movies.findAll({
+        where: { name: { [Op.like]: '%' + idOrName + '%' } },
         attributes: { exclude: ["createdAt", "updatedAt"] },
         include: [
             { association: 'director', attributes: { exclude: ["createdAt", "updatedAt"] }, through: { where: { 'personRule': 'director' }, attributes: [] } },
@@ -69,10 +69,14 @@ const associateRule = async (rule, body, movieId) => {
         person = await Person.findByPk(body.id);
         if (!!person) {
             await person.update(body)
-        } else {
-            person = await Person.create({ ...body })
         }
     }
+
+    if (!(person && person.id)) {
+        person = await Person.create({ ...body })
+    }
+
+    console.log(person.id);
 
     args = { personId: person.id, movieId: movieId, personRule: rule };
 
@@ -81,10 +85,9 @@ const associateRule = async (rule, body, movieId) => {
         await personMovie.update(args);
     } else {
         personMovie = await PersonMovie.create({ ...args })
-        console.log({ criadooo: personMovie });
     }
 
-    return this.findById(movieId);
+    return await this.findById(movieId);
 }
 
 exports.associateActor = async (actor, movieId) => {

@@ -17,8 +17,7 @@ export class PersonDetailsComponent implements OnInit {
   @Input() person: Person;
   constructor(
     private formBuilder: FormBuilder,
-    private service: PersonService,
-    private snackBar: MatSnackBar) { }
+    private service: PersonService) { }
 
   ngOnInit(): void {
     this.personForm = this.formBuilder.group({
@@ -27,19 +26,19 @@ export class PersonDetailsComponent implements OnInit {
       bornAt: [this.person?.bornAt],
       role: [this.person?.role.toLowerCase(), Validators.required],
       imgUrl: [''],
-      id: [this.person.id]
+      id: [this.person?.id]
     });
-    console.log(this.person);
+
   }
 
   onSubmit(movieId) {
     if (this.personForm.valid && !!movieId) {
       this.service.associatePersonMovie(movieId, this.personForm.value).subscribe(res => {
-        console.log(res);
-        window.location.reload();
       }, err => {
         console.log(err);
       });
+    } else {
+      console.log('person form not valid to submit');
     }
   }
 

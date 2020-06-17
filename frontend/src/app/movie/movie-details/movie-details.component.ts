@@ -58,7 +58,6 @@ export class MovieDetailsComponent implements OnInit {
       this.snackBar.open('Successfully submitted', 'x', {
         duration: 2000,
       });
-      window.location.reload();
     }, err => {
       console.log(err),
         this.snackBar.open('Something went wrong, reload and try again', 'x', {
@@ -66,7 +65,6 @@ export class MovieDetailsComponent implements OnInit {
         });
     });
 
-    console.log('updating children');
     // update cast
     this.children.forEach(ch => {
       ch.onSubmit(this.movie.id);
@@ -74,6 +72,9 @@ export class MovieDetailsComponent implements OnInit {
   }
 
   addPerson() {
+    if(!this.movie.actors) {
+      this.movie.actors = [];
+    }
     this.movie.actors.unshift(new Person());
   }
 

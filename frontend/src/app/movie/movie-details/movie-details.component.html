@@ -4,7 +4,7 @@
     <mat-icon>border_color</mat-icon>
   </button>
 
-  <form [formGroup]="movieForm" (ngSubmit)="onSubmit()" class="gridTable row-1 forms">
+  <form [formGroup]="movieForm" class="gridTable row-1 forms">
 
     <!-- name -->
     <mat-form-field>
@@ -34,7 +34,7 @@
     <app-uploader [imagePath]="getImgSrc()" title="movie img" (bodyResponse)="imgListener($event)"></app-uploader>
     <input type="hidden" formControlName=imgUrl/>
 
-    <button *ngIf="!consulting" mat-raised-button color="accent" (click)="addPerson()">add person</button>
+    <button *ngIf="!consulting && !!movie?.id" mat-raised-button color="accent" (click)="addPerson()">add person</button>
 
     <app-person-details *ngFor="let person of movie?.actors" [person]="personRole(person, 'actor')"
       [consulting]="consulting">
@@ -48,7 +48,7 @@
     </app-person-details>
 
     <!-- submit -->
-    <button *ngIf="!consulting" mat-raised-button color="accent" [disabled]='movieForm.invalid' type="submit"
+    <button (click)="onSubmit()" *ngIf="!consulting" mat-raised-button color="accent" [disabled]='movieForm.invalid' type="submit"
       class="btn btn-warning">Submit</button>
     <!-- <mat-divider></mat-divider> -->
 
