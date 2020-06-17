@@ -25,20 +25,34 @@ router.get('/:movieId', async (req, resp) => {
    resp.json(movies);
 });
 
-router.post('/:movieId/actor', async (req, resp) => {
+router.patch('/:movieId', async (req, resp) => {
+   const movies = await MoviesController.update(req.body, req.params.movieId)
+      .catch(err => { console.log(err); resp.status(400) });
+
+   resp.json(movies);
+});
+
+router.delete('/:movieId', async (req, resp) => {
+   const numbers = await MoviesController.delete(req.params.movieId)
+      .catch(err => { console.log(err); resp.sendStatus(400) });
+
+   resp.json({entriesDeleted: numbers}).status(200);
+});
+
+router.post('/:movieId/actors', async (req, resp) => {
    const movie = await MoviesController.associateActor(req.body, req.params.movieId)
       .catch(err => { console.log(err); resp.status(400) });
    resp.json(movie);
 });
 
-router.post('/:movieId/director', async (req, resp) => {
+router.post('/:movieId/directors', async (req, resp) => {
    const movie = await MoviesController.associateDirector(req.body, req.params.movieId)
       .catch(err => { console.log(err); resp.status(400) });
 
    resp.json(movie);
 });
 
-router.post('/:movieId/writer', async (req, resp) => {
+router.post('/:movieId/writers', async (req, resp) => {
    const movie = await MoviesController.associateWriter(req.body, req.params.movieId)
       .catch(err => { console.log(err); resp.status(400) });
 

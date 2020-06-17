@@ -1,0 +1,4 @@
+<div *ngIf="movie" class="preview">
+  <img [src]="movie.imgUrl" alt="{{movie.name}}" routerLink="/consult/{{movie.id}}">
+  <p>{{movie.name | titlecase}}</p>
+</div>

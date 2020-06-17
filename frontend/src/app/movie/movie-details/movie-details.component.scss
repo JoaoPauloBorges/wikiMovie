@@ -1,0 +1,24 @@
+.formSubmission {
+  position: relative;
+}
+
+.btn-edit {
+  position: absolute;
+  top: 1%;
+  left: 80%;
+}
+// large display
+@media (min-width: 600px) {
+  .formSubmission{
+    font-size: 1.1rem;
+  }
+  .btn-edit {
+    left: 90%;
+  }
+  .gridTable {
+    grid-template-columns: 1fr;
+  }
+  .gridTable > * {
+    grid-column: 1/3;
+  }
+}

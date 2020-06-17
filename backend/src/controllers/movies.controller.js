@@ -3,7 +3,7 @@ const Person = require('../models/person');
 const PersonMovie = require('../models/personMovie');
 
 exports.create = async (body) => {
-    body.imgUrl = "https://play.google.com/store/movies/details/Coco?id=UVFVtJcxXWE&hl=en_US";
+    body.imgUrl = "https://lh3.googleusercontent.com/gLt2AMr-UTklFkPigQ6PiAWnfCXUHF5Mp_M1rJwSPnUzFQIhZ7J3nK1SQwR-6Ve_Bac7=w400-h600-rw";
     const movie = await Movies.create({...body});
     return movie;
 }
@@ -23,6 +23,22 @@ exports.findById = async (id) => {
         ]
     });
     return movie;
+}
+
+exports.update = async(body, movieId) => {
+    if (movieId != body.id && !await Movies.findByPk(body.id)) {
+        throw "invalid movieId!";
+    }
+
+    const [ movie ] = await Movies.upsert({...body})
+    return movie;
+}
+
+exports.delete = async(movieId) => {
+    const number = await Movies.destroy({where: {
+        id: movieId
+    }})
+    return number;
 }
 
 const associateRule = async (rule, body, movieId) => {

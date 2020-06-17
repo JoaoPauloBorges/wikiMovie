@@ -1,0 +1,17 @@
+<div class="container">
+  <form [formGroup]="searchForm" (submit)="search()">
+    <div class="row">
+      <mat-form-field>
+        <mat-label>Buscar por nome</mat-label>
+        <input #name matInput formControlName='queryInput' maxlength="100" placeholder="Ex. perdidos em marte">
+        <mat-hint align="end">{{name.value.length}} / 100 </mat-hint>
+      </mat-form-field>
+      <button mat-raised-button>buscar</button>
+    </div>
+
+    <div class="row display">
+      <app-movie-view *ngFor="let movie of resultList" [movie]="movie">
+      </app-movie-view>
+    </div>
+  </form>
+</div>

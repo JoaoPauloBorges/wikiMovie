@@ -1,0 +1,54 @@
+<section class="formSubmission">
+  <h4>Movie</h4>
+  <button *ngIf="movie?.name" class="btn-edit" (click)="consulting=!consulting" mat-fab color="primary">
+    <mat-icon>border_color</mat-icon>
+  </button>
+
+  <form [formGroup]="movieForm" (ngSubmit)="onSubmit()" class="gridTable row-1 forms">
+
+    <!-- name -->
+    <mat-form-field>
+      <mat-label>Movie name</mat-label>
+      <input matInput formControlName="name" maxlength="100">
+      <mat-error *ngIf="movieForm.get('name').errors?.required">
+        Movie name is required!
+      </mat-error>
+    </mat-form-field>
+
+    <!-- sinopse -->
+    <mat-form-field>
+      <mat-label>Sinopse</mat-label>
+      <input #description matInput formControlName="sinopse" maxlength="100">
+      <mat-hint align="end">{{description.value.length}} / 100 </mat-hint>
+    </mat-form-field>
+
+    <!-- year -->
+    <mat-form-field>
+      <mat-label>Movie release</mat-label>
+      <input matInput formControlName="year" [matDatepicker]="picker" placeholder="Choose a date">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <!-- imgPath -->
+
+    <button *ngIf="!consulting" mat-raised-button color="accent" (click)="addPerson()">add person</button>
+
+    <app-person-details *ngFor="let person of movie?.actors" [person]="personRole(person, 'actor')"
+      [consulting]="consulting">
+    </app-person-details>
+
+    <app-person-details *ngFor="let person of movie?.director" [person]="personRole(person, 'director')"
+      [consulting]="consulting"></app-person-details>
+
+    <app-person-details *ngFor="let person of movie?.writer" [person]="personRole(person, 'writer')"
+      [consulting]="consulting">
+    </app-person-details>
+
+    <!-- submit -->
+    <button *ngIf="!consulting" mat-raised-button color="accent" [disabled]='movieForm.invalid' type="submit"
+      class="btn btn-warning">Submit</button>
+    <!-- <mat-divider></mat-divider> -->
+
+  </form>
+</section>

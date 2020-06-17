@@ -1,0 +1,53 @@
+<section>
+
+  <div class="info" *ngIf="consulting; else form">
+    <p class="name">{{person.name}}</p>
+    <p class="role">{{person.role}}</p>
+    <p class="born"> Born: {{person.bornAt}}</p>
+    <p class="bio"> Bio: {{person.bio}}</p>
+  </div>
+
+  <ng-template class="card" #form>
+    <form [formGroup]="personForm" (ngSubmit)="onSubmit()" class="gridTable row-1 forms">
+      <!-- name -->
+      <mat-form-field>
+        <mat-label>Person name</mat-label>
+        <input matInput formControlName="name" maxlength="100">
+        <mat-error *ngIf="personForm.get('name').errors?.required">
+          name is required!
+        </mat-error>
+      </mat-form-field>
+
+      <!-- role -->
+      <mat-form-field>
+        <mat-label>Role</mat-label>
+        <mat-select formControlName="role">
+          <mat-option *ngFor="let role of roles" [value]="role">
+            {{role}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="personForm.get('role').errors?.required">
+          role is required!
+        </mat-error>
+      </mat-form-field>
+
+      <!-- bio -->
+      <mat-form-field>
+        <mat-label>Bio</mat-label>
+        <input #description matInput formControlName="bio" maxlength="100">
+      </mat-form-field>
+
+
+      <!-- born -->
+      <mat-form-field>
+        <mat-label>Born</mat-label>
+        <input matInput formControlName="born" [matDatepicker]="picker" placeholder="Choose a date">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+
+      <!-- imgPath -->
+      <!-- submit -->
+    </form>
+  </ng-template>
+</section>

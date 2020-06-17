@@ -1,0 +1,55 @@
+.container {
+  padding-top: 3%;
+  max-width: 90% !important;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  max-height: 90%;
+  text-align: center;
+}
+
+.row {
+  display: flex;
+  justify-content: space-around;
+  max-width: 98%;
+}
+
+mat-form-field {
+  width: 80%;
+  margin: 0 10px;
+}
+
+.display {
+  margin-top: 15%;
+  flex-wrap: wrap;
+  max-height: 65vh !important;
+  justify-content: center;
+  overflow-y: auto;
+  overflow-x: hidden;
+  --scrollbarBG: linear-gradient(to bottom, rgba(16, 16, 27, 0.336), transparent);
+  --thumbBG: linear-gradient(to top, rgb(245, 61, 92), rgb(167, 0, 209));
+  &::-webkit-scrollbar {
+    width: 5px;
+    height: 30px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: var(--thumbBG);
+    border-radius: 30px;
+    height: 15px;
+  }
+  &::-webkit-scrollbar-track {
+    background: var(--scrollbarBG);
+    border-radius: 30px;
+  }
+}
+
+
+@media (min-width: 600px) {
+  .display {
+    margin-top: 5%;
+    max-height: 60vh;
+    &::-webkit-scrollbar {
+      width: 7px;
+    }
+  }
+}

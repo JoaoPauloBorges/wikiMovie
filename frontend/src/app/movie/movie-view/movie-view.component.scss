@@ -1,0 +1,25 @@
+.preview {
+  margin: 15px;
+  text-align: center;
+  cursor: pointer;
+}
+
+img {
+  width: 80px;
+}
+
+p {
+  font-size: 0.9em;
+}
+
+@media (max-height: 640px) {
+  p {
+    font-size: 0.8em;
+  }
+}
+
+@media (min-width: 600px) {
+  img {
+    width: 140px;
+  }
+}
