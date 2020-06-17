@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const config = require('./config/config');
-const moviesRouter = require('./api/routes/movie.router');
+const moviesRouter = require('./api/routes/movies.router');
 
 
 async function startServer() {
@@ -10,8 +10,7 @@ async function startServer() {
     app.use(cors());
 
     // routes
-    app.use('/api/movies',moviesRouter);
-    
+    app.use('/api/movies',moviesRouter);    
 
     // DB
     require('./models');

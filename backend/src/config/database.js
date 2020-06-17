@@ -6,7 +6,6 @@ module.exports = {
     database: process.env.DB_NAME || 'wikimovie',
     define: {
         timestamps: true,
-        underscored: true,
-        underscoredAll: true,
+        freezeTableName: true
     }
 }
