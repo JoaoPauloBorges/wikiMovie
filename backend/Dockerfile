@@ -35,4 +35,6 @@ COPY ./package.json /code
 RUN npm install --silent
 COPY . .
 
-ENTRYPOINT [ "node", "src/server.js" ]
+EXPOSE 3000
+
+ENTRYPOINT [ "sh", "-c", "npx sequelize-cli db:migrate && node src/server.js" ]

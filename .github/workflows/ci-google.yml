@@ -1,15 +1,3 @@
-# This workflow will build a docker container, publish it to Google Container Registry, and deploy it to GKE when a release is created
-#
-# To configure this workflow:
-#
-# 1. Ensure that your repository contains the necessary configuration for your Google Kubernetes Engine cluster, including deployment.yml, kustomization.yml, service.yml, etc.
-#
-# 2. Set up secrets in your workspace: GKE_PROJECT with the name of the project and GKE_SA_KEY with the Base64 encoded JSON service account key (https://github.com/GoogleCloudPlatform/github-actions/tree/docs/service-account-key/setup-gcloud#inputs).
-#
-# 3. Change the values for the GKE_ZONE, GKE_CLUSTER, IMAGE, and DEPLOYMENT_NAME environment variables (below).
-#
-# For more support on how to run the workflow, please visit https://github.com/google-github-actions/setup-gcloud/tree/master/example-workflows/gke
-
 name: Build and Deploy to GKE
 
 on:
@@ -51,49 +39,48 @@ jobs:
         location: ${{ env.GKE_ZONE }}
         credentials: ${{ secrets.GKE_SA_KEY }}
 
-    - name: Bump version and push tag
-      id: tagging
-      uses: mathieudutour/github-tag-action@v4.5
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+    # - name: Bump version and push tag
+    #   id: tagging
+    #   uses: mathieudutour/github-tag-action@v4.5
+    #   with:
+    #     github_token: ${{ secrets.GITHUB_TOKEN }}
+
+    # ${{ steps.tagging.outputs.new_version }}
 
 ####################################################################################################################################
-
 
     # Build the Backend Docker image
     - name: Build-BACKEND
       working-directory: ./backend
       run: |-
-        docker build \
-          --tag "gcr.io/$PROJECT_ID/backend:${{ steps.tagging.outputs.new_version }}" \
-          .
+        docker build . -t "gcr.io/$PROJECT_ID/backend:latest"
           
    # Push the Backend Docker image to Google Container Registry
     - name: Publish-BACKEND
       working-directory: ./backend
       run: |-
-        docker push "gcr.io/$PROJECT_ID/backend:${{ steps.tagging.outputs.new_version }}"
-        
-   # Build the Frontend Docker image
-    # - name: Build-FRONTEND
-    #   working-directory: ./frontend
-    #   run: |-
-    #     docker build \
-    #       --tag "gcr.io/$PROJECT_ID/frontend:$GITHUB_SHA" \
-    #       --build-arg GITHUB_SHA="$GITHUB_SHA" \
-    #       --build-arg GITHUB_REF="$GITHUB_REF" \
-    #       .
+        docker push "gcr.io/$PROJECT_ID/backend:latest"
+    
+    # Build the Backend Docker image
+    - name: Build-FRONTEND
+      working-directory: ./frontend
+      run: |-
+        docker build . -t "gcr.io/$PROJECT_ID/frontend:latest"
           
-    # Push the FRONTED Docker image to Google Container Registry
-    # - name: Publish-FRONTEND
-    #   working-directory: ./frontend
-    #   run: |-
-    #     docker push "gcr.io/$PROJECT_ID/frontend:$GITHUB_SHA"
+   # Push the Backend Docker image to Google Container Registry
+    - name: Publish-FRONTEND
+      working-directory: ./frontend
+      run: |-
+        docker push "gcr.io/$PROJECT_ID/frontend:latest"
+
 
     # Deploy images to the GKE cluster
     - name: Deploy
       run: |-
-        kubectl apply -f release-k8s/k8s-manifests.yml
+        kubectl apply -f release/k8s-manifests.yml
         kubectl rollout status deployment/$BACK_DEPLOYMENT_NAME
+        kubectl rollout status deployment/$FRONT_DEPLOYMENT_NAME
+        kubectl rollout restart deployment $BACK_DEPLOYMENT_NAME
+        kubectl rollout restart deployment $FRONT_DEPLOYMENT_NAME
         kubectl get services -o wide
       
