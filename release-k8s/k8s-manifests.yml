@@ -15,7 +15,7 @@ spec:
       serviceAccountName: default
       containers:
       - name: backend
-        image: gcr.io/e-varejo/backend:0.0.1
+        image: gcr.io/e-varejo/backend
         ports:
         - containerPort: 3000
         env:
@@ -39,7 +39,7 @@ spec:
   ports:
   - protocol: TCP
     name: http-back
-    port: 3000 #porta que vai ser exposta
+    port: 80 #porta que vai ser exposta
     targetPort: 3000 #porta no container
 ---    
 
