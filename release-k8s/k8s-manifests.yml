@@ -15,7 +15,7 @@ spec:
       serviceAccountName: default
       containers:
       - name: backend
-        image: gcr.io/e-varejo/backend@sha256:0
+        image: gcr.io/e-varejo/backend:v2
         ports:
         - containerPort: 3000
         env:
@@ -47,41 +47,41 @@ spec:
     port: 3000
 ---    
 
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: frontend-deployment
-  labels:
-    app: frontend
-spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: frontend
-  template:
-    metadata:
-      labels:
-        app: frontend
-    spec:
-      containers:
-        - name: frontend
-          image: gcr.io/e-varejo/frontend@sha256:0
-          ports:
-          - containerPort: 80
-          env:
-          - name: BACKEND_PORT
-            value: "backend:3000"
----
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: frontend-deployment
+#   labels:
+#     app: frontend
+# spec:
+#   replicas: 2
+#   selector:
+#     matchLabels:
+#       app: frontend
+#   template:
+#     metadata:
+#       labels:
+#         app: frontend
+#     spec:
+#       containers:
+#         - name: frontend
+#           image: gcr.io/e-varejo/frontend@sha256:0
+#           ports:
+#           - containerPort: 80
+#           env:
+#           - name: BACKEND_PORT
+#             value: "backend:3000"
+# ---
 
-apiVersion: v1
-kind: Service
-metadata:
-  name: frontend-external
-spec:
-  type: LoadBalancer
-  selector:
-    app: frontend
-  ports:
-  - protocol: TCP
-    name: http-front
-    port: 80
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: frontend-external
+# spec:
+#   type: LoadBalancer
+#   selector:
+#     app: frontend
+#   ports:
+#   - protocol: TCP
+#     name: http-front
+#     port: 80
