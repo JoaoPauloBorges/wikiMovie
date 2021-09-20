@@ -56,8 +56,9 @@ jobs:
 
     # Build the Backend Docker image
     - name: Build-BACKEND
+      working-directory: ./backend
       run: |-
-        docker build -f ./backend/Dockerfile \
+        docker build \
           --tag "gcr.io/$PROJECT_ID/backend:$GITHUB_SHA" \
           --build-arg GITHUB_SHA="$GITHUB_SHA" \
           --build-arg GITHUB_REF="$GITHUB_REF" \
@@ -65,13 +66,15 @@ jobs:
           
    # Push the Backend Docker image to Google Container Registry
     - name: Publish-BACKEND
+      working-directory: ./backend
       run: |-
         docker push "gcr.io/$PROJECT_ID/backend:$GITHUB_SHA"
         
    # Build the Frontend Docker image
     - name: Build-FRONTEND
+      working-directory: ./frontend
       run: |-
-        docker build -f ./fronted/Dockerfile \
+        docker build \
           --tag "gcr.io/$PROJECT_ID/fronted:$GITHUB_SHA" \
           --build-arg GITHUB_SHA="$GITHUB_SHA" \
           --build-arg GITHUB_REF="$GITHUB_REF" \
@@ -79,6 +82,7 @@ jobs:
           
     # Push the FRONTED Docker image to Google Container Registry
     - name: Publish-FRONTEND
+      working-directory: ./frontend
       run: |-
         docker push "gcr.io/$PROJECT_ID/frontend:$GITHUB_SHA"
 
