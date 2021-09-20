@@ -32,7 +32,6 @@ spec:
             cpu: 100m
           limits:
             cpu: 100m
-      restartPolicy: OnFailure  
 ---
 apiVersion: v1
 kind: Service
