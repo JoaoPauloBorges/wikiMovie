@@ -15,7 +15,7 @@ spec:
       serviceAccountName: default
       containers:
       - name: backend
-        image: gcr.io/e-varejo/backend:v2
+        image: gcr.io/e-varejo/backend:0.0.1
         ports:
         - containerPort: 3000
         env:
