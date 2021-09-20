@@ -51,6 +51,12 @@ jobs:
         location: ${{ env.GKE_ZONE }}
         credentials: ${{ secrets.GKE_SA_KEY }}
 
+    # - name: Bump version and push tag
+    #   id: tagging
+    #   uses: mathieudutour/github-tag-action@v4.5
+    #   with:
+    #     github_token: ${{ secrets.GITHUB_TOKEN }}
+
 ####################################################################################################################################
 
 

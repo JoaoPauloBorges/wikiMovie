@@ -17,6 +17,10 @@ router.get('/', async (req, resp) => {
    resp.json(movies);
 });
 
+router.get('/teste', async (req, resp) => {
+   resp.json({hello: 'world'});
+});
+
 router.get('/:movieId', async (req, resp) => {
    const movies = await MoviesController.findById(req.params.movieId)
       .catch(err => { console.log(err); resp.status(400) });
