@@ -27,11 +27,6 @@ spec:
           value: postgres
         - name: DB_NAME
           value: wikimovie
-        resources:
-          requests:
-            cpu: 100m
-          limits:
-            cpu: 100m
 ---
 apiVersion: v1
 kind: Service
@@ -45,6 +40,7 @@ spec:
   - protocol: TCP
     name: http-back
     port: 3000
+    targetPort: 3000
 ---    
 
 # apiVersion: apps/v1
