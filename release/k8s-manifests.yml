@@ -20,7 +20,7 @@ spec:
         - containerPort: 3000
         env:
         - name: DB_HOST
-          value: 35.199.117.54
+          value: 192.168.80.3
         - name: DB_USER
           value: postgres
         - name: DB_PASS
