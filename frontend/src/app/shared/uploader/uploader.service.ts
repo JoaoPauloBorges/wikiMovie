@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { environment } from 'src/environments/environment';
 
 
-const API = 'api/files/';
+const API = `${environment.api}/api/files/`;
 
 @Injectable({ providedIn: 'root' })
 

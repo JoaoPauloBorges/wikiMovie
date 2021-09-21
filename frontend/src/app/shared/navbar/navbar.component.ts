@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { Observable} from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 
-const URL_RENDER = 'api/files/image/';
+const URL_RENDER = `${environment.api}/api/files/image/`;
 
 @Component({
   selector: 'app-navbar',

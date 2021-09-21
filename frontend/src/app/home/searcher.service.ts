@@ -2,10 +2,10 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MoviePreview } from '../movie/movie-preview';
+import { environment } from 'src/environments/environment';
 
 
-const API = 'api/movies/';
-
+const API = `${environment.api}/api/movies/`;
 
 @Injectable({ providedIn: 'root' })
 export class SearcherService {

@@ -3,13 +3,14 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { HttpEventType } from '@angular/common/http';
 import { UploaderService } from './uploader.service';
 import { Subscription } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 export interface FileUpload {
   id: string;
   filename: string;
 }
 
-const IMG_RENDER =  '/api/public/';
+const IMG_RENDER =  `${environment.api}/api/public/`;
 
 @Component({
   selector: 'app-uploader',
