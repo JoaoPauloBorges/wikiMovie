@@ -3,9 +3,10 @@ import { Resolve, RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/r
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Movie } from '../movie';
+import { environment } from 'src/environments/environment';
 
 
-const API = 'api/movies/';
+const API = `${environment.api}/'api/movies/`;
 
 @Injectable({ providedIn: 'root' })
 export class MovieDetailsResolver implements Resolve<Movie> {

@@ -3,9 +3,10 @@ import { Resolve, RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/r
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { MoviePreview } from '../movie/movie-preview';
+import { environment } from 'src/environments/environment';
 
 
-const API = 'api/movies';
+const API = `${environment.api}/api/movies`;
 
 @Injectable({ providedIn: 'root' })
 export class HomeListResolver implements Resolve<MoviePreview[]> {
