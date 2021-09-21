@@ -1,4 +1,4 @@
 export const environment = {
-  api: 'floraservice:3000',
+  api: 'http://backend-external',
   production: true
 };
