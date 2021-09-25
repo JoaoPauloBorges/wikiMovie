@@ -1,18 +1,19 @@
 name: Build and Deploy to GKE
 
 on:
-  push:
-    branches: [master]
+  create:
 
 env:
   PROJECT_ID: ${{ secrets.GKE_PROJECT }}
   GKE_CLUSTER: cluster-1
   GKE_ZONE: southamerica-east1-a
   BACK_DEPLOYMENT_NAME: backend-deployment
-  FRONT_DEPLOYMENT_NAME: frontend-deployment
+  CONTAINER_NAME: backend
 
 jobs:
   setup-build-publish-deploy:
+    if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+    
     name: Setup, Build, Publish, and Deploy
     runs-on: ubuntu-latest
     environment: production
@@ -39,13 +40,16 @@ jobs:
         location: ${{ env.GKE_ZONE }}
         credentials: ${{ secrets.GKE_SA_KEY }}
 
-    # - name: Bump version and push tag
-    #   id: tagging
-    #   uses: mathieudutour/github-tag-action@v4.5
-    #   with:
-    #     github_token: ${{ secrets.GITHUB_TOKEN }}
-
-    # ${{ steps.tagging.outputs.new_version }}
+    - name: Branch name
+      id: branch_name
+      run: |
+          echo ::set-output name=SOURCE_TAG::${GITHUB_REF#refs/tags/}
+          
+    - name: Build base image
+      run: |
+          echo $SOURCE_TAG
+      env:
+          SOURCE_TAG: ${{ steps.branch_name.outputs.SOURCE_TAG }}     
 
 ####################################################################################################################################
 
@@ -53,34 +57,20 @@ jobs:
     - name: Build-BACKEND
       working-directory: ./backend
       run: |-
-        docker build . -t "gcr.io/$PROJECT_ID/backend:latest"
+        docker build . -t "gcr.io/$PROJECT_ID/backend:${{SOURCE_TAG}"
           
    # Push the Backend Docker image to Google Container Registry
     - name: Publish-BACKEND
       working-directory: ./backend
       run: |-
-        docker push "gcr.io/$PROJECT_ID/backend:latest"
-    
-    # Build the Backend Docker image
-    - name: Build-FRONTEND
-      working-directory: ./frontend
-      run: |-
-        docker build . -t "gcr.io/$PROJECT_ID/frontend:latest"
-          
-   # Push the Backend Docker image to Google Container Registry
-    - name: Publish-FRONTEND
-      working-directory: ./frontend
-      run: |-
-        docker push "gcr.io/$PROJECT_ID/frontend:latest"
+        docker push "gcr.io/$PROJECT_ID/backend:${{SOURCE_TAG}}"
 
 
     # Deploy images to the GKE cluster
     - name: Deploy
       run: |-
         kubectl apply -f release/k8s-manifests.yml
+        kubectl set image deployment $BACK_DEPLOYMENT_NAME gcr.io/$PROJECT_ID/backend:${{SOURCE_TAG}}
         kubectl rollout status deployment/$BACK_DEPLOYMENT_NAME
-        kubectl rollout restart deployment $BACK_DEPLOYMENT_NAME
-        kubectl rollout status deployment/$FRONT_DEPLOYMENT_NAME
-        kubectl rollout restart deployment $FRONT_DEPLOYMENT_NAME
         kubectl get services -o wide
       
