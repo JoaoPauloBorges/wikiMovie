@@ -45,11 +45,8 @@ jobs:
       run: |
           echo ::set-output name=SOURCE_TAG::${GITHUB_REF#refs/tags/}
           
-    - name: Build base image
-      run: |
-          echo $SOURCE_TAG
-      env:
-          SOURCE_TAG: ${{ steps.branch_name.outputs.SOURCE_TAG }}     
+    - name: echo tag version
+      run: echo $SOURCE_TAG
 
 ####################################################################################################################################
 
@@ -57,13 +54,13 @@ jobs:
     - name: Build-BACKEND
       working-directory: ./backend
       run: |-
-        docker build . -t "gcr.io/$PROJECT_ID/backend:${{SOURCE_TAG}}"
+        docker build . -t "gcr.io/$PROJECT_ID/backend:${{ steps.branch_name.outputs.SOURCE_TAG }}  }"
           
    # Push the Backend Docker image to Google Container Registry
     - name: Publish-BACKEND
       working-directory: ./backend
       run: |-
-        docker push "gcr.io/$PROJECT_ID/backend:${{SOURCE_TAG}}"
+        docker push "gcr.io/$PROJECT_ID/backend:${{ steps.branch_name.outputs.SOURCE_TAG }}  "
 
 
     # Deploy images to the GKE cluster
@@ -72,6 +69,6 @@ jobs:
         # kubectl get services -o wide
     - name: Deploy
       run: |-
-        kubectl set image deployment $BACK_DEPLOYMENT_NAME $CONTAINER_NAME=gcr.io/$PROJECT_ID/backend:${{SOURCE_TAG}}
+        kubectl set image deployment $BACK_DEPLOYMENT_NAME $CONTAINER_NAME=gcr.io/$PROJECT_ID/backend:${{ steps.branch_name.outputs.SOURCE_TAG }}  
 
       
